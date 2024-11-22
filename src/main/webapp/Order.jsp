@@ -100,6 +100,10 @@
             gap: 10px;
         }
 
+        .modal .order_cards .order_card {
+            width: 100%;
+        }
+
         .order_card {
             width: 30%;
             gap: 20px;
@@ -146,7 +150,18 @@
             justify-content: center;
         }
 
-
+        .btn_cancel {
+            outline: none;
+            color: #fff;
+            background: red;
+            border: none;
+            border-radius: 10px;
+            min-width: 32px;
+            min-height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
 
         .header_order {
@@ -317,7 +332,8 @@
                             totalSum += productTotal;
                     %>
                     <div class="order_card col-12">
-                        <img class="order_car" src="${pageContext.request.contextPath}/file/<%=entry.getKey().getId()%>" alt="">
+                        <img class="order_car" src="${pageContext.request.contextPath}/file/<%=entry.getKey().getId()%>"
+                             alt="">
                         <span><%= entry.getKey().getName() + " " %></span>
                         <div>
                             <span><%= entry.getKey().getPrice() + " " %></span>
@@ -327,11 +343,13 @@
                             <span><%=entry.getKey().getPrice() * entry.getValue() %></span>
                         </div>
                         <div class="modal_count_add">
-                            <form action="${pageContext.request.contextPath}/PlusMinusServlet" method="get" style="display: inline;">
+                            <form action="${pageContext.request.contextPath}/PlusMinusServlet" method="get"
+                                  style="display: inline;">
                                 <input type="hidden" name="productId" value="<%= entry.getKey().getId() %>">
                                 <button class="btn_add" name="action" value="minus">-</button>
                             </form>
-                            <form action="${pageContext.request.contextPath}/PlusMinusServlet" method="get" style="display: inline;">
+                            <form action="${pageContext.request.contextPath}/PlusMinusServlet" method="get"
+                                  style="display: inline;">
                                 <input type="hidden" name="productId" value="<%= entry.getKey().getId() %>">
                                 <button class="btn_add" name="action" value="plus">+</button>
                             </form>
@@ -347,11 +365,13 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <form action="${pageContext.request.contextPath}/ClearMap" method="post"><button
-                        class="btn_add"
-                >
-                    Buyurtma
-                </button></form>
+                <form action="${pageContext.request.contextPath}/ClearMap" method="post">
+                    <button
+                            class="btn_add"
+                    >
+                        Buyurtma
+                    </button>
+                </form>
 
             </div>
         </div>
@@ -360,10 +380,8 @@
 
 <!-- end-dialog -->
 
-<script
-        src="https://cdn.misdeliver.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-        crossorigin="anonymous"
-></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
 </body>
 </html>
