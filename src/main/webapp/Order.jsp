@@ -221,7 +221,6 @@
                 }
             }
         } catch (NumberFormatException e) {
-            // Вы можете обработать ошибку или вывести сообщение
             System.out.println("Ошибка: Неверный формат categoryId");
         }
     }
@@ -246,7 +245,6 @@
             </li>
             <%
                 }
-
             %>
         </ul>
         <div class="col-12 text p-3">
@@ -256,7 +254,6 @@
     <!-- end_left_menu -->
 
     <!-- start_oreder_cards -->
-
     <%
         Map<Product, Integer> cart = DB.orders;
         int totalQuantity = 0;
@@ -267,15 +264,10 @@
     <div class="col-10 right_content">
         <div class="header_order">
             <div class="order"><span>Savatcha:</span> <span><%=totalQuantity%></span></div>
-            <a
-                    class="btn btn-primary"
-                    data-bs-toggle="modal"
-                    href="#exampleModalToggle"
-                    role="button"
-            >Savatcha</a
-            >
-
-
+            <a class="btn btn-primary"
+               href="Basket.jsp"
+               role="button"
+            >Savatcha</a>
         </div>
         <div class="order_cards row">
             <%
@@ -298,12 +290,10 @@
             <%
                 }
             %>
-
         </div>
     </div>
     <!-- end_oreder_cards -->
 </div>
-
 <!-- start-dialog -->
 <div
         class="modal fade"
@@ -366,9 +356,7 @@
             </div>
             <div class="modal-footer">
                 <form action="${pageContext.request.contextPath}/ClearMap" method="post">
-                    <button
-                            class="btn_add"
-                    >
+                    <button class="btn_add">
                         Buyurtma
                     </button>
                 </form>

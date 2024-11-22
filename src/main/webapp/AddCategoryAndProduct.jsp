@@ -1,6 +1,7 @@
 <%@ page import="com.example.category.db.DB" %>
 <%@ page import="com.example.category.entity.Category" %>
-<%@ page import="com.example.category.entity.Product" %><%--
+<%@ page import="com.example.category.entity.Product" %>
+<%@ page import="com.example.category.Token" %><%--
   Created by IntelliJ IDEA.
   User: Admin
   Date: 21.11.2024
@@ -101,7 +102,6 @@
         }
 
 
-
         /* end_oreder_cards */
 
 
@@ -109,6 +109,21 @@
 </head>
 <body>
 <%
+    Cookie[] cookies = request.getCookies();
+    if (cookies == null) {
+        response.sendRedirect("Login.jsp");
+    }
+    boolean enter = false;
+    assert cookies != null;
+    for (Cookie cookie : cookies) {
+        if (cookie.getName().equals("token") && cookie.getValue().equals(Token.getValue())) {
+            enter = true;
+        }
+    }
+    if (!enter){
+        response.sendRedirect("Login.jsp");
+        return;
+    }
     String name = request.getParameter("name");
 %>
 <div class="row col-12 main_menu">
@@ -128,9 +143,6 @@
                 </a>
             </li>
         </ul>
-        <div class="col-12 text p-3">
-            <a href="Login.jsp" class="btn btn-primary">Log out</a>
-        </div>
     </div>
     <!-- end_left_menu -->
 
@@ -138,6 +150,9 @@
     <div class="col-10 right_content">
         <!-- Category button -->
 
+        <div class="col-12 text p-3" style="position: relative;">
+            <a href="Login.jsp" class="btn btn-primary" style="position: absolute; top: 0; right: 0; margin: 10px;">Log out</a>
+        </div>
         <%
             if (name == null || name.equals("category")) {
         %>
@@ -165,6 +180,7 @@
         <%
             if (name != null && name.equals("product")) {
         %>
+
         <h2>Add Product</h2>
         <form action="${pageContext.request.contextPath}/AddProductServlet" method="POST" enctype="multipart/form-data">
             <div class="form-group">

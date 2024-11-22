@@ -15,12 +15,11 @@ public class PlusMinusServlet extends HttpServlet {
         String productIdStr = req.getParameter("productId");
         String action = req.getParameter("action");
 
-        // Проверка на наличие параметров
+
         if (productIdStr != null && action != null) {
             try {
                 int productId = Integer.parseInt(productIdStr);
 
-                // Найти продукт по ID
                 Product product = DB.products.stream()
                         .filter(p -> p.getId() == productId)
                         .findFirst()
@@ -28,25 +27,22 @@ public class PlusMinusServlet extends HttpServlet {
 
                 if (product != null && DB.orders.containsKey(product)) {
                     int currentQuantity = DB.orders.get(product);
-
-                    // Увеличение или уменьшение количества
                     if ("plus".equals(action)) {
                         DB.orders.put(product, currentQuantity + 1);
                     } else if ("minus".equals(action) && currentQuantity > 0) {
                         DB.orders.put(product, currentQuantity - 1);
-                        // Удалить продукт из корзины, если количество стало 0
                         if (DB.orders.get(product) == 0) {
                             DB.orders.remove(product);
                         }
                     }
                 }
             } catch (NumberFormatException e) {
-                e.printStackTrace(); // Логирование ошибки
+                e.printStackTrace();
             }
         }
 
         // Перенаправление обратно на страницу
-        resp.sendRedirect("/Order.jsp");
+        resp.sendRedirect("/Basket.jsp");
     }
 
 

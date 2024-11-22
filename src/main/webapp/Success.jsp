@@ -1,18 +1,24 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: Admin
-  Date: 21.11.2024
-  Time: 22:16
-  To change this template use File | Settings | File Templates.
---%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>Title</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thank You Page</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-<h2>Your order has been placed successfully!</h2>
-<p>Thank you for your purchase.</p>
-<a href="${pageContext.request.contextPath}/Order.jsp">Go back to shopping</a>
+<body class="d-flex flex-column min-vh-100">
+
+<div class="container text-center my-auto">
+
+    <h1 class="display-3">Thank you!</h1>
+</div>
+
+<div class="container text-center mb-3">
+    <a href="${pageContext.request.contextPath}/Order.jsp" class="btn btn-primary">Go</a>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </body>
 </html>
