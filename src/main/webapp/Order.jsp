@@ -127,7 +127,7 @@
 
         .order_card img {
             width: 100%;
-            height: 180px;
+            height: 330px;
             border-radius: 8px;
             object-fit: cover;
         }
@@ -147,18 +147,7 @@
         }
 
 
-        .btn_cancel {
-            outline: none;
-            color: #fff;
-            background: red;
-            border: none;
-            border-radius: 10px;
-            min-width: 32px;
-            min-height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+
 
         .header_order {
             display: flex;
@@ -252,6 +241,7 @@
     <!-- end_left_menu -->
 
     <!-- start_oreder_cards -->
+
     <%
         Map<Product, Integer> cart = DB.orders;
         int totalQuantity = 0;
@@ -269,13 +259,15 @@
                     role="button"
             >Savatcha</a
             >
+
+
         </div>
         <div class="order_cards row">
             <%
                 for (Product product : filteredProducts) {
                     boolean isInCart = cart.containsKey(product);
             %>
-            <form action="${pageContext.request.contextPath}/AddToCartServlet" method="post" class="order_card col-12">
+            <form action="${pageContext.request.contextPath}/AddToCartServlet" method="post" class="order_card col-8">
                 <input type="hidden" name="productId" value="<%= product.getId() %>">
                 <input type="hidden" name="categoryId" value="<%= categoryId %>">
                 <input type="hidden" name="action" value="<%= isInCart ? "remove" : "add" %>">
@@ -319,12 +311,13 @@
             <div class="modal-body">
                 <div class="order_cards row">
                     <%
+                        double totalSum = 0;
                         for (Map.Entry<Product, Integer> entry : DB.orders.entrySet()) {
-
+                            double productTotal = entry.getKey().getPrice() * entry.getValue();
+                            totalSum += productTotal;
                     %>
                     <div class="order_card col-12">
-                        <img src="${pageContext.request.contextPath}/file/<%=entry.getKey().getId()%>" alt="" width="50"
-                             height="50">
+                        <img class="order_car" src="${pageContext.request.contextPath}/file/<%=entry.getKey().getId()%>" alt="">
                         <span><%= entry.getKey().getName() + " " %></span>
                         <div>
                             <span><%= entry.getKey().getPrice() + " " %></span>
@@ -334,26 +327,32 @@
                             <span><%=entry.getKey().getPrice() * entry.getValue() %></span>
                         </div>
                         <div class="modal_count_add">
-                            <form action="${pageContext.request.contextPath}/PlusMinusServlet>" method="post">
-                                <button class="btn_add" name="name" value="minus">-</button>
+                            <form action="${pageContext.request.contextPath}/PlusMinusServlet" method="get" style="display: inline;">
+                                <input type="hidden" name="productId" value="<%= entry.getKey().getId() %>">
+                                <button class="btn_add" name="action" value="minus">-</button>
                             </form>
-                            <button class="btn_add" name="name" value="plus">+</button>
+                            <form action="${pageContext.request.contextPath}/PlusMinusServlet" method="get" style="display: inline;">
+                                <input type="hidden" name="productId" value="<%= entry.getKey().getId() %>">
+                                <button class="btn_add" name="action" value="plus">+</button>
+                            </form>
                         </div>
                     </div>
                     <%
                         }
                     %>
+                    <div class="total_sum">
+                        <span>Total:</span>
+                        <span><%= totalSum %></span>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button
-                        class="btn btn-primary"
-                        data-bs-target="#exampleModalToggle2"
-                        data-bs-toggle="modal"
-                        data-bs-dismiss="modal"
+                <form action="${pageContext.request.contextPath}/ClearMap" method="post"><button
+                        class="btn_add"
                 >
                     Buyurtma
-                </button>
+                </button></form>
+
             </div>
         </div>
     </div>
@@ -362,7 +361,7 @@
 <!-- end-dialog -->
 
 <script
-        src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        src="https://cdn.misdeliver.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"
 ></script>

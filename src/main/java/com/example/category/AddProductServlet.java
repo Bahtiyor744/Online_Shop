@@ -1,7 +1,6 @@
 package com.example.category;
 
 import com.example.category.db.DB;
-import com.example.category.entity.Category;
 import com.example.category.entity.Product;
 
 import javax.servlet.ServletException;
@@ -14,7 +13,6 @@ import javax.servlet.http.Part;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
 
 @WebServlet("/AddProductServlet")
 @MultipartConfig

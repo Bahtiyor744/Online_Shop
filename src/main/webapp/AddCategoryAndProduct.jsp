@@ -99,48 +99,6 @@
             border-radius: 12px;
             margin-bottom: 24px;
         }
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgb(0,0,0);
-            background-color: rgba(0,0,0,0.4);
-            padding-top: 60px;
-        }
-
-        /* Модальное окно */
-        .modal-content {
-            background-color: #fefefe;
-            margin: 5% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-        }
-
-        /* Закрыть кнопку */
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-        /* Открытие модального окна при активном классе */
-        .modal.show {
-            display: block;
-        }
 
 
 
@@ -152,13 +110,6 @@
 <body>
 <%
     String name = request.getParameter("name");
-    String action = null;
-    if (name == null || name.equals("category")) {
-        action = request.getParameter("action");
-    } else if (name.equals("product")) {
-        action = request.getParameter("action");
-    }
-
 %>
 <div class="row col-12 main_menu">
     <!-- start_left_menu -->
@@ -190,32 +141,15 @@
         <%
             if (name == null || name.equals("category")) {
         %>
-        <form method="GET" action="${pageContext.request.contextPath}/AddCategoryAndProduct.jsp?name=category">
-            <button type="submit" name="action" value="OpenCategory">
-                +
-            </button>
-        </form>
-        <%
-            if ("OpenCategory".equals(action)) {
-        %>
-        <div class="modal show" id="myModal">
-            <div class="modal-content">
-                <span class="close" onclick="window.location.href='AddCategoryAndProduct.jsp';">&times;</span>
-                <h2>Add Category</h2>
-                <form action="${pageContext.request.contextPath}/AddCategoryServlet" method="POST">
-                    <div class="form-group">
-                        <div class="mb-3">
-                            <input type="text" class="form-control" placeholder="Category Name" name="category" required>
-                        </div>
-                    </div>
-                    <button type="submit">Add</button>
-                </form>
+        <h2>Add Category</h2>
+        <form action="${pageContext.request.contextPath}/AddCategoryServlet" method="POST">
+            <div class="form-group">
+                <div class="mb-3">
+                    <input type="text" class="form-control" placeholder="Category Name" name="category" required>
+                </div>
             </div>
-        </div>
-
-        <%
-            }
-        %>
+            <button class="btn btn-primary" type="submit">Add</button>
+        </form>
         <%
             for (Category category : DB.categorys) {
         %>
@@ -224,18 +158,12 @@
             <span><%= category.getName() %></span>
         </div>
         <%
-            }
-        %>
-        <%
+                }
             }
         %>
 
-
         <%
-            System.out.println(name);
             if (name != null && name.equals("product")) {
-                System.out.println(action);
-
         %>
         <h2>Add Product</h2>
         <form action="${pageContext.request.contextPath}/AddProductServlet" method="POST" enctype="multipart/form-data">
@@ -249,16 +177,15 @@
                 <div class="mb-3">
                     <input type="text" class="form-control" placeholder="Category Id" name="categoryid" required>
                 </div>
-                <div class="mb-3">
+                <div class="btn btn-primary; mb-3">
                     <input type="file" name="productImg">
                 </div>
             </div>
-            <button type="submit">Add</button>
+            <button class="btn btn-primary" type="submit">Add</button>
         </form>
 
         <%
             for (Product product : DB.products) {
-
         %>
         <div class="order_card col-12">
             <span><%= product.getId() %></span>
@@ -266,18 +193,10 @@
             <span><%= product.getPrice() %></span>
             <span><%= product.getCategory_id() %></span>
         </div>
-
-
         <%
+                }
             }
         %>
-
-
-        <%
-            }
-        %>
-
-
     </div>
 </div>
 
