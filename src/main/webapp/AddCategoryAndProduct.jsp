@@ -100,11 +100,7 @@
             border-radius: 12px;
             margin-bottom: 24px;
         }
-
-
         /* end_oreder_cards */
-
-
     </style>
 </head>
 <body>

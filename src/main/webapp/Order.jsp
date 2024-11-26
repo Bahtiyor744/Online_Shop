@@ -3,7 +3,10 @@
 <%@ page import="com.example.category.entity.Product" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.ArrayList" %>
-<%@ page import="java.util.Map" %><%--
+<%@ page import="java.util.Map" %>
+<%@ page import="com.example.category.entity.Basket" %>
+<%@ page import="java.util.Objects" %>
+<%@ page import="com.example.category.entity.User" %><%--
   Created by IntelliJ IDEA.
   User: Admin
   Date: 20.11.2024
@@ -20,8 +23,8 @@
             href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
             rel="stylesheet"
             integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
-            crossorigin="anonymous"
-    />
+            crossorigin="anonymous"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <style>
         /* start_left_menu */
 
@@ -227,35 +230,48 @@
 %>
 <div class="row col-12 main_menu">
     <!-- start_left_menu -->
-    <div class="col-2 left_menu">
-        <div class="categories">Categories</div>
-        <ul>
-            <li class="<%= (categoryId.equals("0")) ? "active" : "" %>">
-                <a href="Order.jsp?categoryId=0">
-                    All
-                </a>
-            </li>
-            <%
-                for (Category category : DB.categorys) {
-            %>
-            <li class="<%= Integer.parseInt(categoryId) == (category.getId()) ? "active" : "" %>">
-                <a href="Order.jsp?categoryId=<%=category.getId()%>">
-                    <%=category.getName()%>
-                </a>
-            </li>
-            <%
-                }
-            %>
-        </ul>
-        <div class="col-12 text p-3">
-            <a href="Login.jsp" class="btn btn-primary">Log out</a>
+
+    <div class="col-2 left_menu d-flex flex-column justify-content-between" style="height: 100vh;">
+        <div>
+            <div class="categories">Categories</div>
+            <ul>
+                <li class="<%= (categoryId.equals("0")) ? "active" : "" %>">
+                    <a href="Order.jsp?categoryId=0">
+                        All
+                    </a>
+                </li>
+                <%
+                    for (Category category : DB.categorys) {
+                %>
+                <li class="<%= Integer.parseInt(categoryId) == (category.getId()) ? "active" : "" %>">
+                    <a href="Order.jsp?categoryId=<%=category.getId()%>">
+                        <%=category.getName()%>
+                    </a>
+                </li>
+                <%
+                    }
+                %>
+            </ul>
+        </div>
+        <div class="user-info text-center">
+            <hr>
+            <div class="user-icon mb-2">
+                <i class="bi bi-person-circle" style="font-size: 48px; color: #6c757d;"></i>
+            </div>
+            <div class="user-name">
+                <p style="margin: 0; font-weight: bold;">
+                    <%= session.getAttribute("user") != null ? ((User) session.getAttribute("user")).getFirstname() : "Guest" %>
+                </p>
+            </div>
         </div>
     </div>
+
     <!-- end_left_menu -->
 
     <!-- start_oreder_cards -->
     <%
-        Map<Product, Integer> cart = DB.orders;
+        Basket basket = (Basket) Objects.requireNonNullElse(session.getAttribute("basket"), new Basket());
+        Map<Product, Integer> cart = basket.getMap();
         int totalQuantity = 0;
         for (Integer count : cart.values()) {
             totalQuantity += count;
@@ -263,15 +279,41 @@
     %>
     <div class="col-10 right_content">
         <div class="header_order">
-            <div class="order"><span>Savatcha:</span> <span><%=totalQuantity%></span></div>
-            <a class="btn btn-primary"
-               href="Basket.jsp"
-               role="button"
-            >Savatcha</a>
+            <div class="order"><span>Basket:</span> <span><%=totalQuantity%></span></div>
+            <div>
+                <%
+                    User user = (User) session.getAttribute("user");
+                    boolean enter = user != null;
+                %>
+                <%
+                    if (!enter) {
+                %>
+                <a href="Login.jsp" class="btn btn-primary">
+                    Login
+                </a>
+                <%
+                } else {
+                %>
+                <a class="btn btn-outline-success" href="MyOrders.jsp" style="font-weight: bold;">
+                    My Orders
+                </a>
+                <a href="${pageContext.request.contextPath}/ClearMap" class="btn btn-outline-primary">
+                    Log out
+                </a>
+                <%
+                    }
+                %>
+                <a class="btn btn-primary" href="Basket.jsp">
+                    Basket
+                </a>
+            </div>
         </div>
         <div class="order_cards row">
             <%
-                for (Product product : filteredProducts) {
+                for
+                (
+                        Product product : filteredProducts
+                ) {
                     boolean isInCart = cart.containsKey(product);
             %>
             <form action="${pageContext.request.contextPath}/AddToCartServlet" method="post" class="order_card col-8">
@@ -294,80 +336,6 @@
     </div>
     <!-- end_oreder_cards -->
 </div>
-<!-- start-dialog -->
-<div
-        class="modal fade"
-        id="exampleModalToggle"
-        aria-hidden="true"
-        aria-labelledby="exampleModalToggleLabel"
-        tabindex="-1"
->
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <div class="your_order">Buyurtmalar:</div>
-                <button
-                        type="button"
-                        class="btn-close"
-                        data-bs-dismiss="modal"
-                        aria-label="Close"
-                ></button>
-            </div>
-            <div class="modal-body">
-                <div class="order_cards row">
-                    <%
-                        double totalSum = 0;
-                        for (Map.Entry<Product, Integer> entry : DB.orders.entrySet()) {
-                            double productTotal = entry.getKey().getPrice() * entry.getValue();
-                            totalSum += productTotal;
-                    %>
-                    <div class="order_card col-12">
-                        <img class="order_car" src="${pageContext.request.contextPath}/file/<%=entry.getKey().getId()%>"
-                             alt="">
-                        <span><%= entry.getKey().getName() + " " %></span>
-                        <div>
-                            <span><%= entry.getKey().getPrice() + " " %></span>
-                            <span>*</span>
-                            <span><%=  entry.getValue() %></span>
-                            <span><%=" = "%></span>
-                            <span><%=entry.getKey().getPrice() * entry.getValue() %></span>
-                        </div>
-                        <div class="modal_count_add">
-                            <form action="${pageContext.request.contextPath}/PlusMinusServlet" method="get"
-                                  style="display: inline;">
-                                <input type="hidden" name="productId" value="<%= entry.getKey().getId() %>">
-                                <button class="btn_add" name="action" value="minus">-</button>
-                            </form>
-                            <form action="${pageContext.request.contextPath}/PlusMinusServlet" method="get"
-                                  style="display: inline;">
-                                <input type="hidden" name="productId" value="<%= entry.getKey().getId() %>">
-                                <button class="btn_add" name="action" value="plus">+</button>
-                            </form>
-                        </div>
-                    </div>
-                    <%
-                        }
-                    %>
-                    <div class="total_sum">
-                        <span>Total:</span>
-                        <span><%= totalSum %></span>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <form action="${pageContext.request.contextPath}/ClearMap" method="post">
-                    <button class="btn_add">
-                        Buyurtma
-                    </button>
-                </form>
-
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- end-dialog -->
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>

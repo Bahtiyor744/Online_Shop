@@ -16,7 +16,7 @@ import java.nio.file.Path;
 @MultipartConfig
 public class FileServlet extends HttpServlet {
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws  IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String pathInfo = req.getPathInfo();
         int productid = Integer.parseInt(pathInfo.split("/")[1]);
         Product product = DB.products.stream().filter(item -> item.getId() == productid).findFirst().orElseThrow();

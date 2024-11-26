@@ -18,15 +18,16 @@ import java.nio.file.Path;
 @MultipartConfig
 public class AddProductServlet extends HttpServlet {
     String path = "D:/G46/Category/files/";
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String name = req.getParameter("product");
+        String name = req.getParameter("name");
         int price = Integer.parseInt(req.getParameter("price"));
-        int categoryid = Integer.parseInt(req.getParameter("categoryid"));
-        Part productImg = req.getPart("productImg");
-        Files.write(Path.of(path +name +".jpg"), productImg.getInputStream().readAllBytes());
-        String photoUrl = path +name +".jpg";
-        DB.products.add(new Product(name,categoryid,price,photoUrl));
-        resp.sendRedirect("/AddCategoryAndProduct.jsp?name=product");
+        int categoryid = Integer.parseInt(req.getParameter("category_id"));
+        Part productImg = req.getPart("image");
+        Files.write(Path.of(path + name + ".jpg"), productImg.getInputStream().readAllBytes());
+        String photoUrl = path + name + ".jpg";
+        DB.products.add(new Product(name, categoryid, price, photoUrl));
+        resp.sendRedirect("/Admin.jsp?name=product");
     }
 }

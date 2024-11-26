@@ -1,6 +1,7 @@
-<%@ page import="com.example.category.db.DB" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="com.example.category.entity.Product" %>
+<%@ page import="com.example.category.entity.Basket" %>
+<%@ page import="java.util.Objects" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -10,6 +11,17 @@
     <title>Products Table</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
+    <style>
+        table th:not(:first-child), table td:not(:first-child) {
+            vertical-align: middle;
+            text-align: center;
+        }
+
+        table .first_td {
+            width: 100px;
+            height: 100px;
+        }
+    </style>
 </head>
 <body>
 <div class="container mt-5">
@@ -28,15 +40,16 @@
         <tbody>
         <!-- Dynamic Rows -->
         <%
+            Basket basket = (Basket) Objects.requireNonNullElse(session.getAttribute("basket"), new Basket());
             double totalSum = 0;
-            for (Map.Entry<Product, Integer> entry : DB.orders.entrySet()) {
+            for (Map.Entry<Product, Integer> entry : basket.getMap().entrySet()) {
                 double productTotal = entry.getKey().getPrice() * entry.getValue();
                 totalSum += productTotal;
         %>
         <tr>
-            <td>
+            <td class="first_td">
                 <img src="${pageContext.request.contextPath}/file/<%=entry.getKey().getId()%>" alt="Product Photo"
-                     style="width: 100px; height: 100px;">
+                     style="width: 100%; height: 100%;">
             </td>
             <td><%= entry.getKey().getName() + " " %>
             </td>
